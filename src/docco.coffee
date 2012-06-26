@@ -232,6 +232,15 @@ if sources.length
   ensure_directory 'docs', ->
     fs.writeFile 'docs/docco.css', docco_styles
     files = sources.slice(0)
+
+    # Generate index file.
+    index_template = template fs.readFileSync(__dirname + '/../resources/index.jst').toString()
+    index_html = index_template {
+      title: 'pheebs docs 0.1'
+      files: files
+    }
+    fs.writeFile 'docs/index.html', index_html
+
+    # Generate doc files.
     next_file = -> generate_documentation files.shift(), next_file if files.length
     next_file()
-
