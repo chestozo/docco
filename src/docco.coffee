@@ -106,6 +106,9 @@ highlight = (source, sections, callback) ->
   language = get_language source
   pygments = spawn 'pygmentize', ['-l', language.name, '-f', 'html', '-O', 'encoding=utf-8,tabsize=2']
   output   = ''
+  colors   =
+    TODO:  '#FDFEE0'
+    FIXME: '#FFD6D6'
 
   pygments.stderr.addListener 'data',  (error)  ->
     console.error error.toString() if error
@@ -123,6 +126,11 @@ highlight = (source, sections, callback) ->
     for section, i in sections
       section.code_html = highlight_start + fragments[i] + highlight_end
       section.docs_html = showdown.makeHtml section.docs_text
+
+      # Additional highlight.
+      for substr, color of colors
+        if section.docs_text.indexOf(substr) >= 0
+          section.docs_html = section.docs_html.replace '<p>', '<p style="background-color: ' + color + '">'
     callback()
 
   if pygments.stdin.writable
