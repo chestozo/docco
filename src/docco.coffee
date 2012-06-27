@@ -188,6 +188,10 @@ for ext, l of languages
   # Note: the class is "c" for Python and "c1" for the other languages
   l.divider_html = new RegExp('\\n*<span class="c1?">' + l.symbol + 'DIVIDER<\\/span>\\n*')
 
+  # NOTE hack for yate
+  if ext == '.yate'
+    l.divider_html = /\n*\/\/DIVIDER\n*/
+
 # Get the current language we're documenting, based on the extension.
 get_language = (source) -> languages[path.extname(source)]
 
